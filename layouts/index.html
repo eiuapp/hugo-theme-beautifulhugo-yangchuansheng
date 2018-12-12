@@ -9,7 +9,7 @@
         {{ end }}
 
         <div class="posts-list">
-          {{ $pag := .Paginate (where .Data.Pages "Type" "post") }}
+          {{ $pag := .Paginate (where .Data.Pages "Type" "posts") }}
           {{ range $pag.Pages }}
             <article class="post-preview">
               <a href="{{ .Permalink }}">
@@ -19,15 +19,12 @@
                   {{ .Params.subtitle }}
                   </h3>
                 {{ end }}
-                {{ if .Params.image }}
-                <img src="{{ .Params.image }}" alt="{{ .Title }}" class="img-title" />
-                {{ end }}
               </a>
 
               {{ partial "post_meta.html" . }}
               <div class="post-entry">
                 {{ if .Truncated }}
-                  {{ if .Params.summary }}{{ .Params.summary }}{{ else }}{{ .Summary }}{{ end }}
+                  {{ .Summary }}
                   <a href="{{ .Permalink }}" class="post-read-more">[{{ i18n "readMore" }}]</a>
                 {{ else }}
                   {{ .Content }}
@@ -35,11 +32,11 @@
               </div>
 
               {{ if .Params.tags }}
-                <div class="blog-tags">
-                  {{ range .Params.tags }}
-                    <a href="{{ $.Site.LanguagePrefix | absURL }}/tags/{{ . | urlize }}/">{{ . }}</a>&nbsp;
-                  {{ end }}
-                </div>
+                <span class="post-meta">
+                {{ range .Params.tags }}
+                  #<a href="{{ $.Site.LanguagePrefix | absURL }}tags/{{ . | urlize }}/">{{ . }}</a>&nbsp;
+                {{ end }}
+                </span>
               {{ end }}
             </article>
           {{ end }}
@@ -49,17 +46,23 @@
           <ul class="pager main-pager">
             {{ if .Paginator.HasPrev }}
               <li class="previous">
-                <a href="{{ .URL }}page/{{ .Paginator.Prev.PageNumber }}/">&larr; {{ i18n "newerPosts" }}</a>
+                <a href="{{ .URL }}page/{{ .Paginator.Prev.PageNumber }}">&larr; {{ i18n "newerPosts" }}</a>
               </li>
             {{ end }}
             {{ if .Paginator.HasNext }}
               <li class="next">
-                <a href="{{ .URL }}page/{{ .Paginator.Next.PageNumber }}/">{{ i18n "olderPosts" }} &rarr;</a>
+                <a href="{{ .URL }}page/{{ .Paginator.Next.PageNumber }}">{{ i18n "olderPosts" }} &rarr;</a>
               </li>
             {{ end }}
           </ul>
         {{ end }}
       </div>
+      <div align="center" class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        {{ template "_internal/pagination.html" . }}
+        {{ range .Paginator.Pages }}
+        {{ end }}
+      </div>
     </div>
   </div>
 {{ end }}
+
